@@ -1,6 +1,8 @@
-../Core/Src/main.c:76:17:dshot_prepare_packet	32	static
-../Core/Src/main.c:100:13:dshot_prepare_dmabuffer	24	static
-../Core/Src/main.c:120:5:main	16	static
-../Core/Src/main.c:183:6:SystemClock_Config	120	static
-../Core/Src/main.c:235:6:MPU_Config	24	static
-../Core/Src/main.c:266:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:43:19:Spark_SetPulseUs	16	static
+../Core/Src/main.c:53:19:Spark_SetCommand	16	static
+../Core/Src/main.c:60:6:Spark_NeutralAll	16	static
+../Core/Src/main.c:66:13:Spark_Start	16	static
+../Core/Src/main.c:85:5:main	8	static
+../Core/Src/main.c:120:6:SystemClock_Config	120	static
+../Core/Src/main.c:148:6:MPU_Config	24	static
+../Core/Src/main.c:167:6:Error_Handler	4	static,ignoring_inline_asm

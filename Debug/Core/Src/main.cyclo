@@ -1,6 +1,8 @@
-../Core/Src/main.c:76:17:dshot_prepare_packet	2
-../Core/Src/main.c:100:13:dshot_prepare_dmabuffer	3
-../Core/Src/main.c:120:5:main	1
-../Core/Src/main.c:183:6:SystemClock_Config	4
-../Core/Src/main.c:235:6:MPU_Config	1
-../Core/Src/main.c:266:6:Error_Handler	1
+../Core/Src/main.c:43:19:Spark_SetPulseUs	10
+../Core/Src/main.c:53:19:Spark_SetCommand	4
+../Core/Src/main.c:60:6:Spark_NeutralAll	2
+../Core/Src/main.c:66:13:Spark_Start	13
+../Core/Src/main.c:85:5:main	1
+../Core/Src/main.c:120:6:SystemClock_Config	4
+../Core/Src/main.c:148:6:MPU_Config	1
+../Core/Src/main.c:167:6:Error_Handler	2
