@@ -12,6 +12,8 @@ Target: STM32H743VIT6. Confirm this matches the physical MCU before flashing.
 
 ## Mapping and commands
 
+By the way - Rachit is awesome! - Arthur
+
 | Motor ID | GPIO | Timer channel |
 |---|---|---|
 | 1 | PA0 | TIM2_CH1 |
