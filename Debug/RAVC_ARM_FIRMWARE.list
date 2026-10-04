@@ -29,17 +29,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  12 .debug_rnglists 0000092b  00000000  00000000  00013178  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_macro  00035ff5  00000000  00000000  00013aa3  2**0
+ 13 .debug_macro  00035fe2  00000000  00000000  00013aa3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_line   0000e141  00000000  00000000  00049a98  2**0
+ 14 .debug_line   0000e28c  00000000  00000000  00049a85  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_str    0015aefb  00000000  00000000  00057bd9  2**0
+ 15 .debug_str    0015ae43  00000000  00000000  00057d11  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .comment      00000043  00000000  00000000  001b2ad4  2**0
+ 16 .comment      00000043  00000000  00000000  001b2b54  2**0
                   CONTENTS, READONLY
- 17 .debug_frame  00003150  00000000  00000000  001b2b18  2**2
+ 17 .debug_frame  00002e5c  00000000  00000000  001b2b98  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line_str 0000009a  00000000  00000000  001b5c68  2**0
+ 18 .debug_line_str 00000058  00000000  00000000  001b59f4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -7631,18 +7631,18 @@ HAL_StatusTypeDef HAL_TIMEx_MasterConfigSynchronization(TIM_HandleTypeDef *htim,
 
 08002f5c <__libc_init_array>:
  8002f5c:	b570      	push	{r4, r5, r6, lr}
- 8002f5e:	4d0d      	ldr	r5, [pc, #52]	@ (8002f94 <__libc_init_array+0x38>)
- 8002f60:	4c0d      	ldr	r4, [pc, #52]	@ (8002f98 <__libc_init_array+0x3c>)
- 8002f62:	1b64      	subs	r4, r4, r5
- 8002f64:	10a4      	asrs	r4, r4, #2
+ 8002f5e:	4b0d      	ldr	r3, [pc, #52]	@ (8002f94 <__libc_init_array+0x38>)
+ 8002f60:	4d0d      	ldr	r5, [pc, #52]	@ (8002f98 <__libc_init_array+0x3c>)
+ 8002f62:	1b5b      	subs	r3, r3, r5
+ 8002f64:	109c      	asrs	r4, r3, #2
  8002f66:	2600      	movs	r6, #0
  8002f68:	42a6      	cmp	r6, r4
  8002f6a:	d109      	bne.n	8002f80 <__libc_init_array+0x24>
- 8002f6c:	4d0b      	ldr	r5, [pc, #44]	@ (8002f9c <__libc_init_array+0x40>)
- 8002f6e:	4c0c      	ldr	r4, [pc, #48]	@ (8002fa0 <__libc_init_array+0x44>)
- 8002f70:	f000 f818 	bl	8002fa4 <_init>
- 8002f74:	1b64      	subs	r4, r4, r5
- 8002f76:	10a4      	asrs	r4, r4, #2
+ 8002f6c:	f000 f81a 	bl	8002fa4 <_init>
+ 8002f70:	4d0a      	ldr	r5, [pc, #40]	@ (8002f9c <__libc_init_array+0x40>)
+ 8002f72:	4b0b      	ldr	r3, [pc, #44]	@ (8002fa0 <__libc_init_array+0x44>)
+ 8002f74:	1b5b      	subs	r3, r3, r5
+ 8002f76:	109c      	asrs	r4, r3, #2
  8002f78:	2600      	movs	r6, #0
  8002f7a:	42a6      	cmp	r6, r4
  8002f7c:	d105      	bne.n	8002f8a <__libc_init_array+0x2e>

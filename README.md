@@ -12,13 +12,19 @@ Target: STM32H743VIT6. Confirm this matches the physical MCU before flashing.
 
 ## Mapping and commands
 
-By the way - Rachit is awesome! - Arthur
+By the way - Rachit is stupid! - Arthur
 
 | Motor ID | GPIO | Timer channel |
 |---|---|---|
 | 1 | PA0 | TIM2_CH1 |
 | 2 | PA2 | TIM2_CH3 |
 | 3 | PA3 | TIM2_CH4 |
+
+| Encoder | GPIO | Timer channel |
+|---|---|---|
+| 1 | PE9 | TIM1_CH1 |
+| 2 | PE11 | TIM1_CH2 |
+| 3 | PE13 | TIM1_CH3 |
 
 The main loop deliberately commands no motion. Hardware repeats neutral continuously.
 
@@ -45,3 +51,5 @@ The IOC was reconstructed from the pasted configuration, with DMA removed and a 
 
 Reference: https://docs.revrobotics.com/brushless/spark-flex/specs
 REV specifies 1000 us reverse, 1500 us neutral, 2000 us forward and 50–200 Hz input. Neutral means zero output voltage with the configured brake/coast behavior, not active position holding.
+
+## Note: the code used is based on a hypothetical use of REV thru bore v1 encoder, which inputs 1-1024us per each 1025us period cycle

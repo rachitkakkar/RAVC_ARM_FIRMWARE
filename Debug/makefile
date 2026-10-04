@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (13.3.rel1)
+# Toolchain: GNU Tools for STM32 (14.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -60,8 +60,8 @@ all: main-build
 main-build: RAVC_ARM_FIRMWARE.elf secondary-outputs
 
 # Tool invocations
-RAVC_ARM_FIRMWARE.elf RAVC_ARM_FIRMWARE.map: $(OBJS) $(USER_OBJS) /Users/rachitkakkar/Documents/root/Documents/College\ Work\ Fall\ 2026/Texas\ Aerial\ Robotics/RAVC_ARM_FIRMWARE/STM32H743VITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "RAVC_ARM_FIRMWARE.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/Users/rachitkakkar/Documents/root/Documents/College Work Fall 2026/Texas Aerial Robotics/RAVC_ARM_FIRMWARE/STM32H743VITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RAVC_ARM_FIRMWARE.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+RAVC_ARM_FIRMWARE.elf RAVC_ARM_FIRMWARE.map: $(OBJS) $(USER_OBJS) /Users/Crypxtic/Desktop/RAVC_ARM_FIRMWARE/STM32H743VITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "RAVC_ARM_FIRMWARE.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/Users/Crypxtic/Desktop/RAVC_ARM_FIRMWARE/STM32H743VITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RAVC_ARM_FIRMWARE.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
