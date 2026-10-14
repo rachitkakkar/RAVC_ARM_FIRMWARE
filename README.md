@@ -1,4 +1,4 @@
-# RAVC Arm Firmware
+# RAVC Arm Firmware (disregard motor stuff for servos)
 
 Target: STM32H743VIT6. Confirm this matches the physical MCU before flashing.
 
@@ -14,11 +14,22 @@ Target: STM32H743VIT6. Confirm this matches the physical MCU before flashing.
 
 By the way - Rachit is awesome! - Arthur
 
-| Motor ID | GPIO | Timer channel |
+| Servo | GPIO | Timer channel |
 |---|---|---|
 | 1 | PA0 | TIM2_CH1 |
 | 2 | PA2 | TIM2_CH3 |
 | 3 | PA3 | TIM2_CH4 |
+
+| Servo | GPIO | Timer channel |
+|---|---|---|
+| 1 | PE9 | TIM1_CH1 |
+| 2 | PE11 | TIM1_CH2 |
+| 3 | PE13 | TIM1_CH3 |
+
+| UART3 | GPIO | |
+|---|---|---|
+| TX | PB10 |  |
+| RX | PB11 |  |
 
 The main loop deliberately commands no motion. Hardware repeats neutral continuously.
 
