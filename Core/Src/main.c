@@ -1,7 +1,7 @@
 /* USER CODE BEGIN Header */
 /**
  * @file main.c
- * @brief Three SPARK Flex servo-PWM outputs for NEO Vortex motors.
+ * @brief Five servo-PWM outputs with an in-firmware mock UART test.
  * Copyright (c) 2026 STMicroelectronics. All rights reserved.
  * Licensed under the LICENSE file in the project root; otherwise AS-IS.
  */
@@ -29,7 +29,12 @@
 #define SERVO_MIN_US       1000U
 #define SERVO_NEUTRAL_US   1500U
 #define SERVO_MAX_US       2000U
-#define SERVO_COUNT        3U
+#define SERVO_COUNT        5U
+#define SERVO_ID_ARM_BASE      1U  /* PA0,  TIM2_CH1 */
+#define SERVO_ID_JOINT_ARM     2U  /* PA2,  TIM2_CH3 */
+#define SERVO_ID_ARM_ROTATION  3U  /* PA3,  TIM2_CH4 */
+#define SERVO_ID_CLAW          4U  /* PE9,  TIM1_CH1 */
+#define SERVO_ID_WRIST         5U  /* PE11, TIM1_CH2 */
 
 /* USER CODE END PD */
 
@@ -69,7 +74,10 @@ static void Servo_Start(void);
 #define ROS_CMD_TIMEOUT_MS 250U
 #define ROS_RX_BUFFER_SIZE 64U
 
+#define MOCK_UART_FIRMWARE
+#ifndef MOCK_UART_FIRMWARE /* Physical UART reception is disabled during the mock test. */
 static uint8_t ros_rx_byte;
+#endif
 static char ros_rx_buffer[ROS_RX_BUFFER_SIZE];
 static volatile uint16_t ros_rx_len = 0;
 static volatile uint8_t ros_msg_ready = 0;
@@ -79,6 +87,7 @@ static uint32_t ros_last_cmd_ms = 0;
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+#ifndef MOCK_UART_FIRMWARE /* Original UART reception and ROS handler retained for reference. */
 static void ROS_UART_Start(void)
 {
     HAL_UART_Receive_IT(&huart3, &ros_rx_byte, 1);
@@ -146,6 +155,27 @@ static void ROS_ProcessCommand(char *line)
     }
 }
 
+#endif
+
+/* Five-command mock parser; exercises the existing buffer/update path. */
+static void Mock_ProcessCommand(char *line)
+{
+    char prefix, extra;
+    int cmd[SERVO_COUNT];
+
+    if (sscanf(line, " %c , %d , %d , %d , %d , %d %c",
+               &prefix, &cmd[0], &cmd[1], &cmd[2], &cmd[3], &cmd[4],
+               &extra) != 6 || prefix != 'M')
+        return;
+
+    for (uint32_t i = 0; i < SERVO_COUNT; ++i) {
+        /* Servo_SetCommand clamps each value to [-1000, 1000]. */
+        if (Servo_SetCommand(i + 1U, cmd[i]) != HAL_OK)
+            return;
+    }
+    ros_last_cmd_ms = HAL_GetTick();
+}
+
 static void ROS_UART_Update(void)
 {
     char line[ROS_RX_BUFFER_SIZE];
@@ -165,14 +195,27 @@ static void ROS_UART_Update(void)
     __enable_irq();
 
     if (len > 0)
-        ROS_ProcessCommand(line);
+        Mock_ProcessCommand(line);
 
     // Stop commanded motion if communication times out
     if ((HAL_GetTick() - ros_last_cmd_ms) > ROS_CMD_TIMEOUT_MS)
         Servo_NeutralAll();
 }
 
-/* Motor IDs are 1..3. Calls are intended from one control task.
+/* Called from main only; bypasses UART interrupts and newline framing. */
+static void Mock_UART_Packet(const char *packet)
+{
+    size_t len = strlen(packet);
+    if (len == 0 || len >= ROS_RX_BUFFER_SIZE || ros_msg_ready)
+        return;
+
+    memcpy(ros_rx_buffer, packet, len + 1U);
+    ros_rx_len = (uint16_t)len;
+    ros_msg_ready = 1U;
+    ROS_UART_Update();
+}
+
+/* Servo IDs are 1..5. Calls are intended from one control task.
  * Compare preload makes changes take effect at the next 5 ms frame.
  * These are motor-output commands, NOT joint-angle or regulated speed targets.
  */
@@ -222,7 +265,9 @@ static void Servo_Start(void)
 {
   /* Detect an unregenerated or incorrectly configured tim.c. */
   if ((htim2.Instance != TIM2) || (htim2.Init.Prescaler != 63U) ||
-      (htim2.Init.Period != 4999U)) Error_Handler();
+      (htim2.Init.Period != 4999U) ||
+      (htim1.Instance != TIM1) || (htim1.Init.Prescaler != 63U) ||
+      (htim1.Init.Period != 4999U)) Error_Handler();
 
   /* Enable OC preloads */
   __HAL_TIM_ENABLE_OCxPRELOAD(SERVO_ARM_BASE_TIMER, SERVO_ARM_BASE_CHANNEL);
@@ -237,6 +282,9 @@ static void Servo_Start(void)
   if (HAL_TIM_GenerateEvent(&htim2, TIM_EVENTSOURCE_UPDATE) != HAL_OK)
     Error_Handler();
   __HAL_TIM_CLEAR_FLAG(&htim2, TIM_FLAG_UPDATE);
+  if (HAL_TIM_GenerateEvent(&htim1, TIM_EVENTSOURCE_UPDATE) != HAL_OK)
+    Error_Handler();
+  __HAL_TIM_CLEAR_FLAG(&htim1, TIM_FLAG_UPDATE);
 
   /* Start PWM outputs */
   if (HAL_TIM_PWM_Start(SERVO_ARM_BASE_TIMER, SERVO_ARM_BASE_CHANNEL) != HAL_OK) Error_Handler();
@@ -278,9 +326,14 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_TIM1_Init();
-  MX_USART3_UART_Init();
+  /* MX_USART3_UART_Init(); -- physical UART bypassed for this mock test. */
   /* USER CODE BEGIN 2 */
   Servo_Start();
+  HAL_Delay(1000); /* Observe neutral on all five outputs before the test. */
+  /* Expected us: base=1550, joint=1500, rotation=1450, claw=1600, wrist=1400.
+   * Send once; ROS_UART_Update returns all five to neutral after >250 ms.
+   */
+  Mock_UART_Packet("M,100,0,-100,200,-200");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -290,22 +343,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    /* Deliberately stays neutral; no automatic motor movement.
-     * Add command handling or joint control here. For example, once ready:
-     * Spark_SetCommand(1U, 100);  // +10% command, 1550 us
-     * Spark_SetCommand(2U, -100); // -10% command, 1450 us
-     * Spark_SetCommand(3U, 0);    // neutral, 1500 us
-     *
-     * Hardware keeps transmitting the last command even if this loop stalls.
-     * Add a watchdog/command timeout before implementing unattended motion.
-     */
+    ROS_UART_Update();
     HAL_Delay(5);
-//    for (uint32_t i = 0; i++; i < 3) {
-//    	uint32_t motorP = (uint32_t) PID_Control(encoder_targets[i], encoder_value[i], elapsed_time, i);
-//    	Spark_SetCommand(i, motorP * 2); //2 times since motorP returns [-500,500]
-//    }
-
-//    start_time = HAL_GetTick();
 
   }
   /* USER CODE END 3 */

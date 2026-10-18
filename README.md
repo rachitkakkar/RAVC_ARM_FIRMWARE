@@ -16,15 +16,12 @@ By the way - Rachit is awesome! - Arthur
 
 | Servo | GPIO | Timer channel |
 |---|---|---|
-| 1 | PA0 | TIM2_CH1 |
-| 2 | PA2 | TIM2_CH3 |
-| 3 | PA3 | TIM2_CH4 |
-
-| Servo | GPIO | Timer channel |
-|---|---|---|
-| 1 | PE9 | TIM1_CH1 |
-| 2 | PE11 | TIM1_CH2 |
-| 3 | PE13 | TIM1_CH3 |
+| Arm base | PA0 | TIM2_CH1 |
+| Joint arm | PA2 | TIM2_CH3 |
+| Arm rotation | PA3 | TIM2_CH4 |
+| Claw | PE9 | TIM1_CH1 |
+| Wrist | PE11 | TIM1_CH2 |
+| (unused?) | PE13 | TIM1_CH3 |
 
 | UART3 | GPIO | |
 |---|---|---|
